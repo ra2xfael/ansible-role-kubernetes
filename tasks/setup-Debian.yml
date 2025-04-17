@@ -13,12 +13,16 @@
     state: directory
     mode: '0755'
 
-- name: Download Kubernetes GPG key
+- name: Download Kubernetes ASCII key
   get_url:
     url: "{{ kubernetes_apt_repository }}/Release.key"
-    dest: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+    dest: /tmp/kubernetes-release.key
     mode: '0644'
 
+- name: Convert Kubernetes key to GPG binary format
+  command: gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg /tmp/kubernetes-release.key
+  args:
+    creates: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 - name: Add Kubernetes repository.
   deb822_repository:
     name: kubernetes
