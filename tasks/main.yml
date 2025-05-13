@@ -2,6 +2,12 @@
 - name: Include OS-specific variables.
   include_vars: "{{ ansible_os_family }}.yml"
 
+- name: Active br_netfilter module with modprobe
+  modprobe:
+    name: br_netfilter
+    state: present
+    persistent: present
+
 - name: Enable IP forwarding
   sysctl:
     name: net.ipv4.ip_forward
