@@ -2,30 +2,6 @@
 - name: Include OS-specific variables.
   include_vars: "{{ ansible_os_family }}.yml"
 
-- name: Active br_netfilter module with modprobe
-  modprobe:
-    name: br_netfilter
-    state: present
-    persistent: present
-
-- name: Enable IP forwarding
-  sysctl:
-    name: net.ipv4.ip_forward
-    value: '1'
-    state: present
-    reload: true
-
-- name: Disable swap temporarily
-  command: swapoff -a
-  when: ansible_swaptotal_mb > 0
-
-- name: Remove any swap entry from /etc/fstab
-  replace:
-    path: /etc/fstab
-    regexp: '^(\S+\s+\S+\s+swap\s+\S+\s+\S+\s+\S+)$'
-    replace: '# \1'
-  when: ansible_swaptotal_mb > 0
-
 - include_tasks: setup-RedHat.yml
   when: ansible_os_family == 'RedHat'
 
